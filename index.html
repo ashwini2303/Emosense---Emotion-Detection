@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            display: inline-block;
+            text-align: left;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #upload-form {
+            display: none;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        #image-preview {
+            max-width: 100%;
+            max-height: 700px;
+            margin-bottom: 20px;
+        }
+
+        /* Centering styles */
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .center form {
+            width: 500px; /* Adjust the width as needed */
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="center">
+    <h2>Welcome User</h2>
+    <form id="login-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="button" onclick="checkLogin()">Login</button>
+    </form>
+
+    <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data">
+        <h2>Emotion Recognition</h2>
+        <label for="file">Upload an Image:</label>
+        <input type="file" id="file" name="file" accept="image/*" required>
+        <img id="image-preview" src="#" alt="Image Preview">
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function checkLogin() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            // Replace 'your_username' and 'your_password' with your actual credentials
+            if (username === 'monalisa' && password === 'emotion') {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('upload-form').style.display = 'block';
+            } else {
+                alert('Invalid credentials. Please try again.');
+            }
+        }
+
+        document.getElementById('file').addEventListener('change', function(event) {
+            var preview = document.getElementById('image-preview');
+            var fileInput = event.target;
+            var file = fileInput.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Add code to handle image upload and prediction
+            // Display prediction result in the #result div
+            document.getElementById('result').innerText = 'Emotion: Happy'; // Replace with actual prediction
+        });
+    </script>
+</body>
+</html>

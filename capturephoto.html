@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Uploader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        #capture-btn {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Uploader</h1>
+
+    <input type="file" id="file-input" accept="image/*">
+    <label for="file-input">Choose a Photo</label>
+
+    <button id="capture-btn">Capture Photo</button>
+
+    <img id="image-preview" src="" alt="Preview">
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', function (e) {
+            displayImageFromInput(e.target);
+        });
+
+        document.getElementById('capture-btn').addEventListener('click', function () {
+            capturePhoto();
+        });
+
+        function displayImageFromInput(input) {
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    document.getElementById('image-preview').src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function capturePhoto() {
+            const video = document.createElement('video');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+
+                    video.addEventListener('loadeddata', function () {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        const imageDataUrl = canvas.toDataURL('image/png');
+
+                        document.getElementById('image-preview').src = imageDataUrl;
+
+                        // Stop the video stream
+                        stream.getTracks().forEach(track => track.stop());
+                    });
+                })
+                .catch(function (error) {
+                    console.error('Error accessing webcam: ', error);
+                });
+        }
+    </script>
+</body>
+</html>
